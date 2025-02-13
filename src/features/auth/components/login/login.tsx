@@ -4,26 +4,62 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useMutation } from "@tanstack/react-query";
+import { loginService } from "../../services/auth.service";
+import { useRouter } from "next/navigation";
+import { Button, notification } from "antd";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Tài khoản không được để trống"),
   password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
 });
 
+type TLoginForm = ReturnType<(typeof loginSchema)["parse"]>;
+
 export default function Login() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<TLoginForm>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: any) => {
-    console.log("Đăng nhập với:", data);
+  const onSubmit = (data: TLoginForm) => {
+    // NHN0290877
+    // 123qwe@..
+    const payload: TLoginPayload = {
+      app_key: "EDUZAA_V4",
+      username: data.username,
+      password: data.password,
+    };
+    loginMutation.mutate(payload);
   };
+
+  //#region mutation
+  const loginMutation = useMutation({
+    mutationFn: (data: TLoginPayload) => loginService(data),
+    onSuccess: (data) => {
+      if (data?.isFailure) {
+        notification.error({
+          message: "Login Error",
+          description: data.error.message,
+        });
+        return;
+      }
+      router.push("/dashboard");
+    },
+    onError: (err) => {
+      notification.error({
+        message: "Login Error",
+        description: err.message,
+      });
+    },
+  });
+
+  //#endregion
 
   return (
     <>
@@ -63,9 +99,12 @@ export default function Login() {
               </div>
               <Button
                 className="w-full bg-blue-500 hover:bg-blue-700"
-                variant="destructive"
+                type="primary"
+                htmlType="submit"
+                loading={loginMutation.isPending}
+                disabled={loginMutation.isPending}
               >
-                Đăng nhập
+                Login
               </Button>
             </form>
           </CardContent>
