@@ -4,6 +4,7 @@ export const environment = {
   },
   domain: {
     api_auth: process.env.NEXT_PUBLIC_API_AUTH ?? "",
+    api_eduza: process.env.NEXT_PUBLIC_API_EDUZAA ?? "",
   },
   aplication: {
     http: {

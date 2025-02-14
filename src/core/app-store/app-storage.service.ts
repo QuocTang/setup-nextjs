@@ -7,7 +7,7 @@ import { CookieConfigKeys } from "@/config/app-storage/cookie.config";
 import { CacheStorageConfigKeys } from "@/config/app-storage/cache.config";
 import KeyStorageHelper, {
   TDuplicateEntry,
-} from "@/lib/helpers/key-storage/key-storage.helper";
+} from "@/lib/helpers/key-storage.helper";
 
 export enum StorageLocation {
   LOCAL_STORAGE = "LOCAL_STORAGE",

@@ -1,19 +1,12 @@
 import Http from "@/lib/http";
+import { APIS } from "../config";
 
-export const getHoiNhom = async (payload?: any) => {
+export const getHoiNhom = async (payload: THoiNhomSearchPayload) => {
   try {
-    const response: any = await Http.post(
-      "https://eduzaa.api1.lamgigio.net/main-api/api/guild/search",
-      {
-        per_page: 100,
-        khong_gian_id: "",
-        flag: "all",
-      }
-    );
+    const response: any = await Http.post(APIS.hoi_nhom, payload);
 
     return response.list;
   } catch (error) {
-    console.log("error: ", error);
-    return [];
+    throw error;
   }
 };

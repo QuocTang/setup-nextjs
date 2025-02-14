@@ -5,6 +5,7 @@ import CoreAppStorageService, {
 } from "@/core/app-store/app-storage.service";
 import { LoginModel } from "../models/login.model";
 import { CookieConfigKeys } from "@/config/app-storage/cookie.config";
+import { LocalStorageConfigKeys } from "@/config/app-storage/local-storage.config";
 
 export const loginService = async (payload: TLoginPayload) => {
   try {
@@ -15,6 +16,7 @@ export const loginService = async (payload: TLoginPayload) => {
       return response;
     }
     setCookieToken(model.token);
+    setMenuActive(model.listmenu_active);
 
     return model;
   } catch (error) {
@@ -32,6 +34,16 @@ const setCookieToken = (token: string) => {
   );
 };
 
+const setMenuActive = (menu_active: string[]) => {
+  CoreAppStorageService.setItem(
+    LocalStorageConfigKeys.features.auth.menu_active,
+    menu_active,
+    {
+      location: StorageLocation.LOCAL_STORAGE,
+    }
+  );
+};
+
 export const getAccessToken = () => {
   return CoreAppStorageService.getItem<string>(
     CookieConfigKeys.features.auth.user_token,
@@ -42,8 +54,17 @@ export const getAccessToken = () => {
 };
 
 export const getAuthorizationHeader = (type = "JWT") => {
-  // const token = getAccessToken();
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ2OCIsIk5oYW5WaWVuSUQiOiJOSE4wMjkwODc3IiwiYXBwIjoiRURVWkFBX1Y0IiwiaXAiOiI6OmZmZmY6MTI3LjAuMC4xIiwiaWF0IjoxNzM5NDE2OTEwNzMwLCJ0eXBlIjoiTE9HSU5fVE9LRU4iLCJleHAiOjE3Mzk0MTY5MTA3ODB9.q_mW9rMKIBroQfE0vgM1RbP76UCL9FpfYiui3caYYdE";
+  const token = getAccessToken();
   return token ? `${type} ${token}` : "";
+};
+
+export const getMenuActive = () => {
+  return (
+    CoreAppStorageService.getItem<string[]>(
+      LocalStorageConfigKeys.features.auth.menu_active,
+      {
+        location: StorageLocation.LOCAL_STORAGE,
+      }
+    ) || []
+  );
 };

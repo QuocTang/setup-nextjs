@@ -5,8 +5,11 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
+import { POLICIES } from "./policy.config";
 
-type MenuItem = Required<MenuProps>["items"][number];
+type MenuItem = Required<MenuProps>["items"][number] & {
+  action_id?: string[];
+};
 
 export const MENU_ITEMS: MenuItem[] = [
   {
@@ -24,6 +27,7 @@ export const MENU_ITEMS: MenuItem[] = [
     label: "Hội nhóm",
     key: "hoi-nhom",
     icon: <TeamOutlined />,
+    action_id: [POLICIES.eduzaa.hoi_nhom.menu_hoi_nhom],
   },
   {
     label: "Khóa học",

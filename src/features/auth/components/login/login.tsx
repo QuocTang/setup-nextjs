@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMutation } from "@tanstack/react-query";
 import { loginService } from "../../services/auth.service";
 import { useRouter } from "next/navigation";
-import { Button, notification } from "antd";
+import { Button, App } from "antd";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Tài khoản không được để trống"),
@@ -18,6 +18,7 @@ const loginSchema = z.object({
 type TLoginForm = ReturnType<(typeof loginSchema)["parse"]>;
 
 export default function Login() {
+  const { notification } = App.useApp();
   const router = useRouter();
   const {
     register,
